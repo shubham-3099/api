@@ -154,4 +154,6 @@ model UserReview {
 
   user      User @relation(fields: [userId], references: [id], onDelete: Cascade)
   dish      Dish @relation(fields: [dishId], references: [id], onDelete: Cascade)
+  
+  @@unique([userId, dishId])
 }
