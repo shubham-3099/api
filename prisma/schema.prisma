@@ -6,3 +6,152 @@ generator client {
 datasource db {
   provider = "postgresql"
 }
+
+enum VloggerStatus {
+  PENDING
+  VERIFIED
+  REJECTED
+  SUSPENDED
+}
+
+enum SubmissionStatus {
+  PENDING
+  APPROVED
+  REJECTED
+}
+
+enum Platform {
+  YOUTUBE
+  INSTAGRAM
+  FACEBOOK
+  TIKTOK
+  OTHER
+}
+
+model User {
+  id        Int      @id @default(autoincrement())
+  name      String
+  email     String   @unique
+  createdAt DateTime @default(now())
+
+  reviews   UserReview[]
+}
+
+model Vlogger {
+  id          Int           @id @default(autoincrement())
+  name        String
+  email       String        @unique
+  avatarUrl   String?
+  status      VloggerStatus @default(PENDING)
+  createdAt   DateTime      @default(now())
+
+  platforms   VloggerPlatform[]
+  reviews     VloggerReview[]
+  submissions VloggerSubmission[]
+}
+
+model VloggerPlatform {
+  id          Int      @id @default(autoincrement())
+  vloggerId   Int
+  platform    Platform
+  profileUrl  String
+  createdAt   DateTime @default(now())
+
+  vlogger     Vlogger              @relation(fields: [vloggerId], references: [id], onDelete: Cascade)
+  submissions VloggerSubmission[]
+
+  @@unique([vloggerId, platform])
+}
+
+model Restaurant {
+  id        Int      @id @default(autoincrement())
+  name      String
+  address   String
+  city      String
+  latitude  Float?
+  longitude Float?
+  createdAt DateTime @default(now())
+
+  dishes    Dish[]
+}
+
+model Dish {
+  id             Int      @id @default(autoincrement())
+  name           String
+  restaurantId   Int
+  createdAt      DateTime @default(now())
+
+  restaurant     Restaurant       @relation(fields: [restaurantId], references: [id], onDelete: Cascade)
+  vloggerReviews VloggerReview[]
+  userReviews    UserReview[]
+
+  @@unique([restaurantId, name])
+}
+
+model VloggerSubmission {
+  id             Int              @id @default(autoincrement())
+  vloggerId      Int
+  platformId     Int
+  restaurantName String
+  address        String
+  city           String
+  dishName       String
+  title          String?
+  thumbnailUrl   String?
+  status         SubmissionStatus @default(PENDING)
+  createdAt      DateTime         @default(now())
+
+  vlogger        Vlogger          @relation(fields: [vloggerId], references: [id], onDelete: Cascade)
+  platform       VloggerPlatform  @relation(fields: [platformId], references: [id])
+  videos         SubmissionVideo[]
+}
+
+model SubmissionVideo {
+  id           Int              @id @default(autoincrement())
+  submissionId Int
+  platform     Platform
+  videoUrl     String
+  createdAt    DateTime         @default(now())
+
+  submission   VloggerSubmission @relation(fields: [submissionId], references: [id], onDelete: Cascade)
+
+  @@unique([submissionId, platform])
+}
+
+model VloggerReview {
+  id           Int              @id @default(autoincrement())
+  dishId       Int
+  vloggerId    Int
+  title        String?
+  thumbnailUrl String?
+  status       SubmissionStatus @default(PENDING)
+  createdAt    DateTime         @default(now())
+
+  dish         Dish               @relation(fields: [dishId], references: [id], onDelete: Cascade)
+  vlogger      Vlogger            @relation(fields: [vloggerId], references: [id], onDelete: Cascade)
+  videos       VloggerReviewVideo[]
+}
+
+model VloggerReviewVideo {
+  id        Int      @id @default(autoincrement())
+  reviewId  Int
+  platform  Platform
+  videoUrl  String
+  createdAt DateTime @default(now())
+
+  review    VloggerReview @relation(fields: [reviewId], references: [id], onDelete: Cascade)
+
+  @@unique([reviewId, platform])
+}
+
+model UserReview {
+  id        Int      @id @default(autoincrement())
+  userId    Int
+  dishId    Int
+  rating    Int
+  comment   String?
+  createdAt DateTime @default(now())
+
+  user      User @relation(fields: [userId], references: [id], onDelete: Cascade)
+  dish      Dish @relation(fields: [dishId], references: [id], onDelete: Cascade)
+}
