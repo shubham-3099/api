@@ -5,6 +5,7 @@ import vloggerPlatformRoutes from "./routes/vlogger-platform.routes.js";
 import restaurantRoutes from "./routes/restaurant.routes.js";
 import dishRoutes from "./routes/dish.routes.js";
 import reviewRoutes from "./routes/review.routes.js";
+import vloggerReviewRoutes from "./routes/vloggerReview.routes.js";
 
 const app = express();
 
@@ -17,5 +18,6 @@ app.use("/api/restaurants", restaurantRoutes);
 app.use("/api/restaurants", dishRoutes);
 app.use("/api/restaurants", reviewRoutes);
 app.use("/api/reviews", reviewRoutes);
+app.use("/api/restaurants", vloggerReviewRoutes);
 
 export default app;
