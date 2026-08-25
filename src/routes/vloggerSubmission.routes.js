@@ -23,13 +23,15 @@ import { authenticate } from "../middleware/auth.middleware.js";
 import { requireVerifiedVlogger } from "../middleware/vlogger.middleware.js";
 import { authorize } from "../middleware/authorize.js";
 
+import { authorizeSubmissionOwnership } from "../middleware/submissionOwnership.js";
+
 const router = express.Router();
 
 router.post("/", authenticate, requireVerifiedVlogger, validate(createVloggerSubmissionSchema), asyncHandler(createVloggerSubmission));
 router.get("/", asyncHandler(getVloggerSubmissions));
-router.get("/:submissionId", asyncHandler(getVloggerSubmissionById));
-router.patch("/:submissionId", validate(updateVloggerSubmissionSchema), asyncHandler(updateVloggerSubmission));
-router.delete("/:submissionId", asyncHandler(deleteVloggerSubmission));
+router.get("/:submissionId", authenticate, authorizeSubmissionOwnership, asyncHandler(getVloggerSubmissionById));
+router.patch("/:submissionId", authenticate, requireVerifiedVlogger, authorizeSubmissionOwnership, validate(updateVloggerSubmissionSchema), asyncHandler(updateVloggerSubmission));
+router.delete("/:submissionId", authenticate, requireVerifiedVlogger, authorizeSubmissionOwnership, asyncHandler(deleteVloggerSubmission));
 router.patch("/:submissionId/approve", authenticate, authorize("ADMIN"), asyncHandler(approveVloggerSubmission));
 router.patch("/:submissionId/reject", authenticate, authorize("ADMIN"), asyncHandler(rejectVloggerSubmission));
 
