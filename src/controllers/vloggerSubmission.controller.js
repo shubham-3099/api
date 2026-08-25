@@ -1,7 +1,40 @@
 import prisma from "../lib/prisma.js";
 
 export const createVloggerSubmission = async (req, res) => {
-    const {
+  const {
+    platformId,
+    restaurantName,
+    address,
+    city,
+    dishName,
+    title,
+    thumbnailUrl,
+  } = req.body;
+
+  const vloggerId = req.user.vloggerId;
+
+  const platform = await prisma.vloggerPlatform.findUnique({
+    where: {
+      id: platformId,
+    },
+  });
+
+  if (!platform) {
+    return res.status(404).json({
+      success: false,
+      message: "Vlogger platform not found",
+    });
+  }
+
+  if (platform.vloggerId !== vloggerId) {
+    return res.status(403).json({
+      success: false,
+      message: "Platform does not belong to you",
+    });
+  }
+
+  const submission = await prisma.vloggerSubmission.create({
+    data: {
       vloggerId,
       platformId,
       restaurantName,
@@ -10,58 +43,13 @@ export const createVloggerSubmission = async (req, res) => {
       dishName,
       title,
       thumbnailUrl,
-    } = req.body;
+    },
+  });
 
-    const vlogger = await prisma.vlogger.findUnique({
-      where: {
-        id: vloggerId,
-      },
-    });
-
-    if (!vlogger) {
-      return res.status(404).json({
-        success: false,
-        message: "Vlogger not found",
-      });
-    }
-
-    const platform = await prisma.vloggerPlatform.findUnique({
-      where: {
-        id: platformId,
-      },
-    });
-
-    if (!platform) {
-      return res.status(404).json({
-        success: false,
-        message: "Vlogger platform not found",
-      });
-    }
-
-    if (platform.vloggerId !== vloggerId) {
-      return res.status(400).json({
-        success: false,
-        message: "Platform does not belong to this vlogger",
-      });
-    }
-
-    const submission = await prisma.vloggerSubmission.create({
-      data: {
-        vloggerId,
-        platformId,
-        restaurantName,
-        address,
-        city,
-        dishName,
-        title,
-        thumbnailUrl,
-      },
-    });
-
-    res.status(201).json({
-      success: true,
-      data: submission,
-    });
+  res.status(201).json({
+    success: true,
+    data: submission,
+  });
 };
 
 export const getVloggerSubmissions = async (req, res) => {
