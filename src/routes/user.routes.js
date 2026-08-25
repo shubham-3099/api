@@ -10,7 +10,7 @@ import {
 import { asyncHandler } from "../middleware/asyncHandler.js";
 
 import { authenticate } from "../middleware/auth.middleware.js";
-import { authorize } from "../middleware/authorize.middleware.js";
+import { authorize } from "../middleware/authorize.js";
 import { authorizeUserOwnership } from "../middleware/ownership.js";
 
 const router = express.Router();
