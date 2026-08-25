@@ -15,7 +15,7 @@ import { requireVerifiedVlogger } from "../middleware/vlogger.middleware.js";
 import { authorizeVloggerReviewOwnership } from "../middleware/vloggerReviewOwnership.js";
 import { validate } from "../middleware/validate.js";
 
-import { createVloggerReview, updateVloggerReviewSchema } from "../controllers/vloggerReview.controller.js";
+import { createVloggerReviewSchema, updateVloggerReviewSchema } from "../validators/vloggerReview.validator.js";
 
 const router = express.Router();
 router.post(

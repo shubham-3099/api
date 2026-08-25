@@ -29,7 +29,6 @@ router.post(
   validate(createVloggerReviewVideoSchema),
   asyncHandler(createVloggerReviewVideo)
 );
-
 router.get(
   "/:restaurantId/dishes/:dishId/vlogger-reviews/:reviewId/videos",
   asyncHandler(getVloggerReviewVideos)
