@@ -1,55 +1,44 @@
 import prisma from "../lib/prisma.js";
 
 export const createVloggerReview = async (req, res) => {
-    const restaurantId = Number(req.params.restaurantId);
-    const dishId = Number(req.params.dishId);
+  const restaurantId = Number(req.params.restaurantId);
+  const dishId = Number(req.params.dishId);
 
-    const {
+  const {
+    title,
+    thumbnailUrl,
+  } = req.body;
+
+  const vloggerId = req.user.vloggerId;
+
+  const dish = await prisma.dish.findFirst({
+    where: {
+      id: dishId,
+      restaurantId,
+    },
+  });
+
+  if (!dish) {
+    return res.status(404).json({
+      success: false,
+      message: "Dish not found for this restaurant",
+    });
+  }
+
+  const review = await prisma.vloggerReview.create({
+    data: {
       vloggerId,
+      dishId,
       title,
       thumbnailUrl,
-    } = req.body;
+      status: "APPROVED",
+    },
+  });
 
-    const vlogger = await prisma.vlogger.findUnique({
-      where: {
-        id: vloggerId,
-      },
-    });
-
-    if (!vlogger) {
-      return res.status(404).json({
-        success: false,
-        message: "Vlogger not found",
-      });
-    }
-
-    const dish = await prisma.dish.findFirst({
-      where: {
-        id: dishId,
-        restaurantId,
-      },
-    });
-
-    if (!dish) {
-      return res.status(404).json({
-        success: false,
-        message: "Dish not found for this restaurant",
-      });
-    }
-
-    const review = await prisma.vloggerReview.create({
-      data: {
-        vloggerId,
-        dishId,
-        title,
-        thumbnailUrl,
-      },
-    });
-
-    res.status(201).json({
-      success: true,
-      data: review,
-    });
+  res.status(201).json({
+    success: true,
+    data: review,
+  });
 };
 
 export const getVloggerReviews = async (req, res) => {
@@ -147,69 +136,31 @@ export const getVloggerReviewById = async (req, res) => {
 };
 
 export const updateVloggerReview = async (req, res) => {
-    const restaurantId = Number(req.params.restaurantId);
-    const dishId = Number(req.params.dishId);
-    const reviewId = Number(req.params.reviewId);
+  const reviewId = Number(req.params.reviewId);
 
-    const {
-      title,
-      thumbnailUrl,
-      status,
-    } = req.body;
+  const { title, thumbnailUrl } = req.body;
 
-    const dish = await prisma.dish.findFirst({
-      where: {
-        id: dishId,
-        restaurantId,
-      },
-    });
+  const data = {};
 
-    if (!dish) {
-      return res.status(404).json({
-        success: false,
-        message: "Dish not found for this restaurant",
-      });
-    }
+  if (title !== undefined) {
+    data.title = title;
+  }
 
-    const existingReview = await prisma.vloggerReview.findFirst({
-      where: {
-        id: reviewId,
-        dishId,
-      },
-    });
+  if (thumbnailUrl !== undefined) {
+    data.thumbnailUrl = thumbnailUrl;
+  }
 
-    if (!existingReview) {
-      return res.status(404).json({
-        success: false,
-        message: "Vlogger review not found for this dish",
-      });
-    }
+  const review = await prisma.vloggerReview.update({
+    where: {
+      id: reviewId,
+    },
+    data,
+  });
 
-    const data = {};
-
-    if (title !== undefined) {
-      data.title = title;
-    }
-
-    if (thumbnailUrl !== undefined) {
-      data.thumbnailUrl = thumbnailUrl;
-    }
-
-    if (status !== undefined) {
-      data.status = status;
-    }
-
-    const review = await prisma.vloggerReview.update({
-      where: {
-        id: reviewId,
-      },
-      data,
-    });
-
-    res.status(200).json({
-      success: true,
-      data: review,
-    });
+  res.status(200).json({
+    success: true,
+    data: review,
+  });
 };
 
 export const deleteVloggerReview = async (req, res) => {
