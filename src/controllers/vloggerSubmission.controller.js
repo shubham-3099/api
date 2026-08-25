@@ -382,3 +382,51 @@ export const approveVloggerSubmission = async (req, res) => {
     });
   }
 };
+
+export const rejectVloggerSubmission = async (req, res) => {
+  try {
+    const submissionId = Number(req.params.submissionId);
+
+    const submission = await prisma.vloggerSubmission.findUnique({
+      where: {
+        id: submissionId,
+      },
+    });
+
+    if (!submission) {
+      return res.status(404).json({
+        success: false,
+        message: "Vlogger submission not found",
+      });
+    }
+
+    if (submission.status !== "PENDING") {
+      return res.status(400).json({
+        success: false,
+        message: "Only pending submissions can be rejected",
+      });
+    }
+
+    const updatedSubmission = await prisma.vloggerSubmission.update({
+      where: {
+        id: submissionId,
+      },
+      data: {
+        status: "REJECTED",
+      },
+    });
+
+    res.status(200).json({
+      success: true,
+      message: "Vlogger submission rejected successfully",
+      data: updatedSubmission,
+    });
+  } catch (error) {
+    console.error(error);
+
+    res.status(500).json({
+      success: false,
+      message: "Failed to reject vlogger submission",
+    });
+  }
+};
