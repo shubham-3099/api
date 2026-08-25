@@ -5,19 +5,6 @@ export const createSubmissionVideo = async (req, res) => {
 
     const { platform, videoUrl } = req.body;
 
-    const submission = await prisma.vloggerSubmission.findUnique({
-      where: {
-        id: submissionId,
-      },
-    });
-
-    if (!submission) {
-      return res.status(404).json({
-        success: false,
-        message: "Vlogger submission not found",
-      });
-    }
-
     const video = await prisma.submissionVideo.create({
       data: {
         submissionId,
@@ -33,34 +20,21 @@ export const createSubmissionVideo = async (req, res) => {
 };
 
 export const getSubmissionVideos = async (req, res) => {
-    const submissionId = Number(req.params.submissionId);
+  const submissionId = Number(req.params.submissionId);
 
-    const submission = await prisma.vloggerSubmission.findUnique({
-      where: {
-        id: submissionId,
-      },
-    });
+  const videos = await prisma.submissionVideo.findMany({
+    where: {
+      submissionId,
+    },
+    orderBy: {
+      createdAt: "desc",
+    },
+  });
 
-    if (!submission) {
-      return res.status(404).json({
-        success: false,
-        message: "Vlogger submission not found",
-      });
-    }
-
-    const videos = await prisma.submissionVideo.findMany({
-      where: {
-        submissionId,
-      },
-      orderBy: {
-        createdAt: "desc",
-      },
-    });
-
-    res.status(200).json({
-      success: true,
-      data: videos,
-    });
+  res.status(200).json({
+    success: true,
+    data: videos,
+  });
 };
 
 export const getSubmissionVideoById = async (req, res) => {
