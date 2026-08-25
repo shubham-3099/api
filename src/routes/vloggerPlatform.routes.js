@@ -6,7 +6,7 @@ import {
   getVloggerPlatformById,
   updateVloggerPlatform,
   deleteVloggerPlatform,
-} from "../controllers/vlogger-platform.controller.js";
+} from "../controllers/vloggerPlatform.controller.js";
 
 const router = express.Router();
 
