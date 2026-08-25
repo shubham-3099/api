@@ -1,7 +1,6 @@
 import express from "express";
 
 import {
-  createUser,
   getUsers,
   getUserById,
   updateUser,
@@ -12,7 +11,6 @@ import { asyncHandler } from "../middleware/asyncHandler.js";
 
 const router = express.Router();
 
-router.post("/", asyncHandler(createUser));
 router.get("/", asyncHandler(getUsers));
 router.get("/:id", asyncHandler(getUserById));
 router.patch("/:id", asyncHandler(updateUser));

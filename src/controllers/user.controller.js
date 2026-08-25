@@ -1,21 +1,5 @@
 import prisma from "../lib/prisma.js";
 
-export const createUser = async (req, res) => {
-  const { name, email } = req.body;
-
-  const user = await prisma.user.create({
-    data: {
-      name,
-      email,
-    },
-  });
-
-  res.status(201).json({
-    success: true,
-    data: user,
-  });
-};
-
 export const getUsers = async (req, res) => {
   const users = await prisma.user.findMany();
 
