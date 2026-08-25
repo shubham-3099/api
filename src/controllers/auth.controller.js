@@ -41,6 +41,7 @@ export const registerUser = async (req, res) => {
 
   const token = generateToken({
     accountId: account.id,
+    userId: account.user.id,
     role: account.role,
   });
 
@@ -86,10 +87,20 @@ export const login = async (req, res) => {
     });
   }
 
-  const token = generateToken({
-    accountId: account.id,
-    role: account.role,
-  });
+    const tokenPayload = {
+        accountId: account.id,
+        role: account.role,
+    };
+
+    if (account.user) {
+    tokenPayload.userId = account.user.id;
+    }
+
+    if (account.vlogger) {
+    tokenPayload.vloggerId = account.vlogger.id;
+    }
+
+    const token = generateToken(tokenPayload);
 
   res.status(200).json({
     success: true,
