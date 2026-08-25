@@ -10,6 +10,7 @@ export const authorizeSubmissionOwnership = async (req, res, next) => {
     select: {
       id: true,
       vloggerId: true,
+      status: true,
     },
   });
 
