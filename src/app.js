@@ -10,6 +10,8 @@ import vloggerReviewVideoRoutes from "./routes/vloggerReviewVideo.routes.js";
 import vloggerSubmissionRoutes from "./routes/vloggerSubmission.routes.js";
 import submissionVideoRoutes from "./routes/submissionVideo.routes.js";
 
+import { errorHandler } from "./middleware/errorHandler.js";
+
 const app = express();
 
 app.use(express.json());
@@ -25,5 +27,7 @@ app.use("/api/restaurants", vloggerReviewRoutes);
 app.use("/api/restaurants", vloggerReviewVideoRoutes);
 app.use("/api/vlogger-submissions", vloggerSubmissionRoutes);
 app.use("/api", submissionVideoRoutes);
+
+app.use(errorHandler);
 
 export default app;

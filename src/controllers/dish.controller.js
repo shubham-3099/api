@@ -1,7 +1,6 @@
 import prisma from "../lib/prisma.js";
 
 export const createDish = async (req, res) => {
-  try {
     const restaurantId = Number(req.params.restaurantId);
     const { name } = req.body;
 
@@ -18,22 +17,6 @@ export const createDish = async (req, res) => {
       });
     }
 
-    const existingDish = await prisma.dish.findUnique({
-      where: {
-        restaurantId_name: {
-          restaurantId,
-          name,
-        },
-      },
-    });
-
-    if (existingDish) {
-      return res.status(409).json({
-        success: false,
-        message: "Dish already exists in this restaurant",
-      });
-    }
-
     const dish = await prisma.dish.create({
       data: {
         name,
@@ -45,18 +28,9 @@ export const createDish = async (req, res) => {
       success: true,
       data: dish,
     });
-  } catch (error) {
-    console.error(error);
-
-    res.status(500).json({
-      success: false,
-      message: "Failed to create dish",
-    });
-  }
 };
 
 export const getDishes = async (req, res) => {
-  try {
     const restaurantId = Number(req.params.restaurantId);
 
     const dishes = await prisma.dish.findMany({
@@ -69,18 +43,9 @@ export const getDishes = async (req, res) => {
       success: true,
       data: dishes,
     });
-  } catch (error) {
-    console.error(error);
-
-    res.status(500).json({
-      success: false,
-      message: "Failed to fetch dishes",
-    });
-  }
 };
 
 export const getDishById = async (req, res) => {
-  try {
     const restaurantId = Number(req.params.restaurantId);
     const dishId = Number(req.params.dishId);
 
@@ -102,18 +67,9 @@ export const getDishById = async (req, res) => {
       success: true,
       data: dish,
     });
-  } catch (error) {
-    console.error(error);
-
-    res.status(500).json({
-      success: false,
-      message: "Failed to fetch dish",
-    });
-  }
 };
 
 export const updateDish = async (req, res) => {
-  try {
     const restaurantId = Number(req.params.restaurantId);
     const dishId = Number(req.params.dishId);
     const { name } = req.body;
@@ -149,18 +105,9 @@ export const updateDish = async (req, res) => {
       success: true,
       data: dish,
     });
-  } catch (error) {
-    console.error(error);
-
-    res.status(500).json({
-      success: false,
-      message: "Failed to update dish",
-    });
-  }
 };
 
 export const deleteDish = async (req, res) => {
-  try {
     const restaurantId = Number(req.params.restaurantId);
     const dishId = Number(req.params.dishId);
 
@@ -185,12 +132,4 @@ export const deleteDish = async (req, res) => {
     });
 
     res.status(204).send();
-  } catch (error) {
-    console.error(error);
-
-    res.status(500).json({
-      success: false,
-      message: "Failed to delete dish",
-    });
-  }
 };
