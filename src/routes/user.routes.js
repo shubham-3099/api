@@ -8,12 +8,14 @@ import {
   deleteUser,
 } from "../controllers/user.controller.js";
 
+import { asyncHandler } from "../middleware/asyncHandler.js";
+
 const router = express.Router();
 
-router.post("/", createUser);
-router.get("/", getUsers);
-router.get("/:id", getUserById);
-router.patch("/:id", updateUser);
-router.delete("/:id", deleteUser);
+router.post("/", asyncHandler(createUser));
+router.get("/", asyncHandler(getUsers));
+router.get("/:id", asyncHandler(getUserById));
+router.patch("/:id", asyncHandler(updateUser));
+router.delete("/:id", asyncHandler(deleteUser));
 
 export default router;
