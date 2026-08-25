@@ -1,7 +1,6 @@
 import prisma from "../lib/prisma.js";
 
 export const createVloggerSubmission = async (req, res) => {
-  try {
     const {
       vloggerId,
       platformId,
@@ -63,18 +62,9 @@ export const createVloggerSubmission = async (req, res) => {
       success: true,
       data: submission,
     });
-  } catch (error) {
-    console.error(error);
-
-    res.status(500).json({
-      success: false,
-      message: "Failed to create vlogger submission",
-    });
-  }
 };
 
 export const getVloggerSubmissions = async (req, res) => {
-  try {
     const submissions = await prisma.vloggerSubmission.findMany({
       include: {
         vlogger: {
@@ -97,18 +87,9 @@ export const getVloggerSubmissions = async (req, res) => {
       success: true,
       data: submissions,
     });
-  } catch (error) {
-    console.error(error);
-
-    res.status(500).json({
-      success: false,
-      message: "Failed to fetch vlogger submissions",
-    });
-  }
 };
 
 export const getVloggerSubmissionById = async (req, res) => {
-  try {
     const submissionId = Number(req.params.submissionId);
 
     const submission = await prisma.vloggerSubmission.findUnique({
@@ -140,18 +121,9 @@ export const getVloggerSubmissionById = async (req, res) => {
       success: true,
       data: submission,
     });
-  } catch (error) {
-    console.error(error);
-
-    res.status(500).json({
-      success: false,
-      message: "Failed to fetch vlogger submission",
-    });
-  }
 };
 
 export const updateVloggerSubmission = async (req, res) => {
-  try {
     const submissionId = Number(req.params.submissionId);
 
     const {
@@ -214,18 +186,9 @@ export const updateVloggerSubmission = async (req, res) => {
       success: true,
       data: submission,
     });
-  } catch (error) {
-    console.error(error);
-
-    res.status(500).json({
-      success: false,
-      message: "Failed to update vlogger submission",
-    });
-  }
 };
 
 export const deleteVloggerSubmission = async (req, res) => {
-  try {
     const submissionId = Number(req.params.submissionId);
 
     const existingSubmission =
@@ -249,18 +212,9 @@ export const deleteVloggerSubmission = async (req, res) => {
     });
 
     res.status(204).send();
-  } catch (error) {
-    console.error(error);
-
-    res.status(500).json({
-      success: false,
-      message: "Failed to delete vlogger submission",
-    });
-  }
 };
 
 export const approveVloggerSubmission = async (req, res) => {
-  try {
     const submissionId = Number(req.params.submissionId);
 
     const submission = await prisma.vloggerSubmission.findUnique({
@@ -373,18 +327,9 @@ export const approveVloggerSubmission = async (req, res) => {
       message: "Vlogger submission approved successfully",
       data: result,
     });
-  } catch (error) {
-    console.error(error);
-
-    res.status(500).json({
-      success: false,
-      message: "Failed to approve vlogger submission",
-    });
-  }
 };
 
 export const rejectVloggerSubmission = async (req, res) => {
-  try {
     const submissionId = Number(req.params.submissionId);
 
     const submission = await prisma.vloggerSubmission.findUnique({
@@ -421,12 +366,4 @@ export const rejectVloggerSubmission = async (req, res) => {
       message: "Vlogger submission rejected successfully",
       data: updatedSubmission,
     });
-  } catch (error) {
-    console.error(error);
-
-    res.status(500).json({
-      success: false,
-      message: "Failed to reject vlogger submission",
-    });
-  }
 };
