@@ -15,12 +15,14 @@ import {
   updateVloggerPlatformSchema,
 } from "../validators/vloggerPlatform.validator.js";
 
+import { asyncHandler } from "../middleware/asyncHandler.js";
+
 const router = express.Router();
 
-router.post("/:vloggerId/platforms", validate(createVloggerPlatformSchema), createVloggerPlatform);
-router.get("/:vloggerId/platforms", getVloggerPlatforms);
-router.get("/:vloggerId/platforms/:platformId", getVloggerPlatformById);
-router.patch("/:vloggerId/platforms/:platformId", validate(updateVloggerPlatformSchema), updateVloggerPlatform);
-router.delete("/:vloggerId/platforms/:platformId", deleteVloggerPlatform);
+router.post("/:vloggerId/platforms", validate(createVloggerPlatformSchema), asyncHandler(createVloggerPlatform));
+router.get("/:vloggerId/platforms", asyncHandler(getVloggerPlatforms));
+router.get("/:vloggerId/platforms/:platformId", asyncHandler(getVloggerPlatformById));
+router.patch("/:vloggerId/platforms/:platformId", validate(updateVloggerPlatformSchema), asyncHandler(updateVloggerPlatform));
+router.delete("/:vloggerId/platforms/:platformId", asyncHandler(deleteVloggerPlatform));
 
 export default router;
