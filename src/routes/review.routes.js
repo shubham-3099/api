@@ -10,11 +10,13 @@ import {
 import { validate } from "../middleware/validate.js";
 import { createReviewSchema } from "../validators/userReview.validator.js";
 
+import { asyncHandler } from "../middleware/asyncHandler.js";
+
 const router = express.Router();
 
-router.post("/:restaurantId/dishes/:dishId/reviews", validate(createReviewSchema), createReview);
-router.get("/:restaurantId/dishes/:dishId/reviews", getReviews);
-router.get("/:restaurantId/dishes/:dishId/reviews/:reviewId", getReviewById);
-router.delete("/:restaurantId/dishes/:dishId/reviews/:reviewId", deleteReview);
+router.post("/:restaurantId/dishes/:dishId/reviews", validate(createReviewSchema), asyncHandler(createReview));
+router.get("/:restaurantId/dishes/:dishId/reviews", asyncHandler(getReviews));
+router.get("/:restaurantId/dishes/:dishId/reviews/:reviewId", asyncHandler(getReviewById));
+router.delete("/:restaurantId/dishes/:dishId/reviews/:reviewId", asyncHandler(deleteReview));
 
 export default router;
