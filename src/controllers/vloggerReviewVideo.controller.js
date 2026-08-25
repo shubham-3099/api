@@ -1,7 +1,6 @@
 import prisma from "../lib/prisma.js";
 
 export const createVloggerReviewVideo = async (req, res) => {
-  try {
     const restaurantId = Number(req.params.restaurantId);
     const dishId = Number(req.params.dishId);
     const reviewId = Number(req.params.reviewId);
@@ -25,22 +24,6 @@ export const createVloggerReviewVideo = async (req, res) => {
       });
     }
 
-    const existingVideo = await prisma.vloggerReviewVideo.findUnique({
-      where: {
-        reviewId_platform: {
-          reviewId,
-          platform,
-        },
-      },
-    });
-
-    if (existingVideo) {
-      return res.status(409).json({
-        success: false,
-        message: "Video for this platform already exists for this review",
-      });
-    }
-
     const video = await prisma.vloggerReviewVideo.create({
       data: {
         reviewId,
@@ -53,18 +36,9 @@ export const createVloggerReviewVideo = async (req, res) => {
       success: true,
       data: video,
     });
-  } catch (error) {
-    console.error(error);
-
-    res.status(500).json({
-      success: false,
-      message: "Failed to create vlogger review video",
-    });
-  }
 };
 
 export const getVloggerReviewVideos = async (req, res) => {
-  try {
     const restaurantId = Number(req.params.restaurantId);
     const dishId = Number(req.params.dishId);
     const reviewId = Number(req.params.reviewId);
@@ -99,18 +73,9 @@ export const getVloggerReviewVideos = async (req, res) => {
       success: true,
       data: videos,
     });
-  } catch (error) {
-    console.error(error);
-
-    res.status(500).json({
-      success: false,
-      message: "Failed to fetch vlogger review videos",
-    });
-  }
 };
 
 export const getVloggerReviewVideoById = async (req, res) => {
-  try {
     const restaurantId = Number(req.params.restaurantId);
     const dishId = Number(req.params.dishId);
     const reviewId = Number(req.params.reviewId);
@@ -151,18 +116,9 @@ export const getVloggerReviewVideoById = async (req, res) => {
       success: true,
       data: video,
     });
-  } catch (error) {
-    console.error(error);
-
-    res.status(500).json({
-      success: false,
-      message: "Failed to fetch vlogger review video",
-    });
-  }
 };
 
 export const updateVloggerReviewVideo = async (req, res) => {
-  try {
     const restaurantId = Number(req.params.restaurantId);
     const dishId = Number(req.params.dishId);
     const reviewId = Number(req.params.reviewId);
@@ -222,18 +178,9 @@ export const updateVloggerReviewVideo = async (req, res) => {
       success: true,
       data: video,
     });
-  } catch (error) {
-    console.error(error);
-
-    res.status(500).json({
-      success: false,
-      message: "Failed to update vlogger review video",
-    });
-  }
 };
 
 export const deleteVloggerReviewVideo = async (req, res) => {
-  try {
     const restaurantId = Number(req.params.restaurantId);
     const dishId = Number(req.params.dishId);
     const reviewId = Number(req.params.reviewId);
@@ -277,12 +224,4 @@ export const deleteVloggerReviewVideo = async (req, res) => {
     });
 
     res.status(204).send();
-  } catch (error) {
-    console.error(error);
-
-    res.status(500).json({
-      success: false,
-      message: "Failed to delete vlogger review video",
-    });
-  }
 };

@@ -8,31 +8,14 @@ import {
   deleteVloggerReviewVideo,
 } from "../controllers/vloggerReviewVideo.controller.js";
 
+import { asyncHandler } from "../middleware/asyncHandler.js";
+
 const router = express.Router();
 
-router.post(
-  "/:restaurantId/dishes/:dishId/vlogger-reviews/:reviewId/videos",
-  createVloggerReviewVideo
-);
-
-router.get(
-  "/:restaurantId/dishes/:dishId/vlogger-reviews/:reviewId/videos",
-  getVloggerReviewVideos
-);
-
-router.get(
-  "/:restaurantId/dishes/:dishId/vlogger-reviews/:reviewId/videos/:videoId",
-  getVloggerReviewVideoById
-);
-
-router.patch(
-  "/:restaurantId/dishes/:dishId/vlogger-reviews/:reviewId/videos/:videoId",
-  updateVloggerReviewVideo
-);
-
-router.delete(
-  "/:restaurantId/dishes/:dishId/vlogger-reviews/:reviewId/videos/:videoId",
-  deleteVloggerReviewVideo
-);
+router.post("/:restaurantId/dishes/:dishId/vlogger-reviews/:reviewId/videos", asyncHandler(createVloggerReviewVideo));
+router.get("/:restaurantId/dishes/:dishId/vlogger-reviews/:reviewId/videos", asyncHandler(getVloggerReviewVideos));
+router.get("/:restaurantId/dishes/:dishId/vlogger-reviews/:reviewId/videos/:videoId", asyncHandler(getVloggerReviewVideoById));
+router.patch("/:restaurantId/dishes/:dishId/vlogger-reviews/:reviewId/videos/:videoId", asyncHandler(updateVloggerReviewVideo));
+router.delete("/:restaurantId/dishes/:dishId/vlogger-reviews/:reviewId/videos/:videoId", asyncHandler(deleteVloggerReviewVideo));
 
 export default router;
