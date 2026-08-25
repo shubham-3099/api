@@ -9,6 +9,7 @@ import vloggerReviewRoutes from "./routes/vloggerReview.routes.js";
 import vloggerReviewVideoRoutes from "./routes/vloggerReviewVideo.routes.js";
 import vloggerSubmissionRoutes from "./routes/vloggerSubmission.routes.js";
 import submissionVideoRoutes from "./routes/submissionVideo.routes.js";
+import authRoutes from "./routes/auth.routes.js";
 
 import { errorHandler } from "./middleware/errorHandler.js";
 
@@ -27,6 +28,7 @@ app.use("/api/restaurants", vloggerReviewRoutes);
 app.use("/api/restaurants", vloggerReviewVideoRoutes);
 app.use("/api/vlogger-submissions", vloggerSubmissionRoutes);
 app.use("/api", submissionVideoRoutes);
+app.use("/api/auth", authRoutes);
 
 app.use(errorHandler);
 
