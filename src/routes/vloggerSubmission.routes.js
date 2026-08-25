@@ -6,6 +6,7 @@ import {
   getVloggerSubmissionById,
   updateVloggerSubmission,
   deleteVloggerSubmission,
+  approveVloggerSubmission,
 } from "../controllers/vloggerSubmission.controller.js";
 
 const router = express.Router();
@@ -19,5 +20,7 @@ router.get("/:submissionId", getVloggerSubmissionById);
 router.patch("/:submissionId", updateVloggerSubmission);
 
 router.delete("/:submissionId", deleteVloggerSubmission);
+
+router.patch("/:submissionId/approve", approveVloggerSubmission);
 
 export default router;
