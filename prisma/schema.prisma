@@ -28,28 +28,6 @@ enum Platform {
   OTHER
 }
 
-model User {
-  id        Int      @id @default(autoincrement())
-  name      String
-  email     String   @unique
-  createdAt DateTime @default(now())
-
-  reviews   UserReview[]
-}
-
-model Vlogger {
-  id          Int           @id @default(autoincrement())
-  name        String
-  email       String        @unique
-  avatarUrl   String?
-  status      VloggerStatus @default(PENDING)
-  createdAt   DateTime      @default(now())
-
-  platforms   VloggerPlatform[]
-  reviews     VloggerReview[]
-  submissions VloggerSubmission[]
-}
-
 model VloggerPlatform {
   id          Int      @id @default(autoincrement())
   vloggerId   Int
@@ -156,4 +134,45 @@ model UserReview {
   dish      Dish @relation(fields: [dishId], references: [id], onDelete: Cascade)
   
   @@unique([userId, dishId])
+}
+
+enum AccountRole {
+  USER
+  VLOGGER
+  ADMIN
+}
+
+model Account {
+  id           Int         @id @default(autoincrement())
+  email        String      @unique
+  passwordHash String
+  role         AccountRole @default(USER)
+  createdAt    DateTime    @default(now())
+
+  user         User?
+  vlogger      Vlogger?
+}
+
+model User {
+  id        Int      @id @default(autoincrement())
+  accountId Int      @unique
+  name      String
+  createdAt DateTime @default(now())
+
+  account   Account      @relation(fields: [accountId], references: [id], onDelete: Cascade)
+  reviews   UserReview[]
+}
+
+model Vlogger {
+  id          Int           @id @default(autoincrement())
+  accountId   Int           @unique
+  name        String
+  avatarUrl   String?
+  status      VloggerStatus @default(PENDING)
+  createdAt   DateTime      @default(now())
+
+  account     Account            @relation(fields: [accountId], references: [id], onDelete: Cascade)
+  platforms   VloggerPlatform[]
+  reviews     VloggerReview[]
+  submissions VloggerSubmission[]
 }
