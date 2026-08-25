@@ -112,3 +112,55 @@ export const login = async (req, res) => {
     },
   });
 };
+
+export const registerVlogger = async (req, res) => {
+  const { name, email, password } = req.body;
+
+  const existingAccount = await prisma.account.findUnique({
+    where: {
+      email,
+    },
+  });
+
+  if (existingAccount) {
+    return res.status(409).json({
+      success: false,
+      message: "Email already registered",
+    });
+  }
+
+  const passwordHash = await bcrypt.hash(password, 12);
+
+  const account = await prisma.account.create({
+    data: {
+      email,
+      passwordHash,
+      role: "VLOGGER",
+
+      vlogger: {
+        create: {
+          name,
+          status: "PENDING",
+        },
+      },
+    },
+
+    include: {
+      vlogger: true,
+    },
+  });
+
+  const token = generateToken({
+    accountId: account.id,
+    vloggerId: account.vlogger.id,
+    role: account.role,
+  });
+
+  res.status(201).json({
+    success: true,
+    data: {
+      vlogger: account.vlogger,
+      token,
+    },
+  });
+};

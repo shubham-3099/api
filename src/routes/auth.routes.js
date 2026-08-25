@@ -2,6 +2,7 @@ import express from "express";
 
 import {
   registerUser,
+  registerVlogger,
   login,
 } from "../controllers/auth.controller.js";
 
@@ -10,6 +11,7 @@ import { asyncHandler } from "../middleware/asyncHandler.js";
 
 import {
   registerUserSchema,
+  registerVloggerSchema,
   loginSchema,
 } from "../validators/auth.validator.js";
 
@@ -25,6 +27,12 @@ router.post(
   "/login",
   validate(loginSchema),
   asyncHandler(login)
+);
+
+router.post(
+  "/register/vlogger",
+  validate(registerVloggerSchema),
+  asyncHandler(registerVlogger)
 );
 
 export default router;
