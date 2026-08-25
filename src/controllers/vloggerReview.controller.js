@@ -1,7 +1,6 @@
 import prisma from "../lib/prisma.js";
 
 export const createVloggerReview = async (req, res) => {
-  try {
     const restaurantId = Number(req.params.restaurantId);
     const dishId = Number(req.params.dishId);
 
@@ -51,18 +50,9 @@ export const createVloggerReview = async (req, res) => {
       success: true,
       data: review,
     });
-  } catch (error) {
-    console.error(error);
-
-    res.status(500).json({
-      success: false,
-      message: "Failed to create vlogger review",
-    });
-  }
 };
 
 export const getVloggerReviews = async (req, res) => {
-  try {
     const restaurantId = Number(req.params.restaurantId);
     const dishId = Number(req.params.dishId);
 
@@ -104,18 +94,9 @@ export const getVloggerReviews = async (req, res) => {
       success: true,
       data: reviews,
     });
-  } catch (error) {
-    console.error(error);
-
-    res.status(500).json({
-      success: false,
-      message: "Failed to fetch vlogger reviews",
-    });
-  }
 };
 
 export const getVloggerReviewById = async (req, res) => {
-  try {
     const restaurantId = Number(req.params.restaurantId);
     const dishId = Number(req.params.dishId);
     const reviewId = Number(req.params.reviewId);
@@ -163,18 +144,9 @@ export const getVloggerReviewById = async (req, res) => {
       success: true,
       data: review,
     });
-  } catch (error) {
-    console.error(error);
-
-    res.status(500).json({
-      success: false,
-      message: "Failed to fetch vlogger review",
-    });
-  }
 };
 
 export const updateVloggerReview = async (req, res) => {
-  try {
     const restaurantId = Number(req.params.restaurantId);
     const dishId = Number(req.params.dishId);
     const reviewId = Number(req.params.reviewId);
@@ -238,18 +210,9 @@ export const updateVloggerReview = async (req, res) => {
       success: true,
       data: review,
     });
-  } catch (error) {
-    console.error(error);
-
-    res.status(500).json({
-      success: false,
-      message: "Failed to update vlogger review",
-    });
-  }
 };
 
 export const deleteVloggerReview = async (req, res) => {
-  try {
     const restaurantId = Number(req.params.restaurantId);
     const dishId = Number(req.params.dishId);
     const reviewId = Number(req.params.reviewId);
@@ -289,12 +252,4 @@ export const deleteVloggerReview = async (req, res) => {
     });
 
     res.status(204).send();
-  } catch (error) {
-    console.error(error);
-
-    res.status(500).json({
-      success: false,
-      message: "Failed to delete vlogger review",
-    });
-  }
 };
