@@ -15,12 +15,14 @@ import {
   updateSubmissionVideoSchema,
 } from "../validators/submissionVideo.validator.js";
 
+import { asyncHandler } from "../middleware/asyncHandler.js";
+
 const router = express.Router();
 
-router.post("/vlogger-submissions/:submissionId/videos", validate(createSubmissionVideoSchema), createSubmissionVideo);
-router.get("/vlogger-submissions/:submissionId/videos", getSubmissionVideos);
-router.get("/vlogger-submissions/:submissionId/videos/:videoId", getSubmissionVideoById);
-router.patch("/vlogger-submissions/:submissionId/videos/:videoId", validate(updateSubmissionVideoSchema), updateSubmissionVideo);
-router.delete("/vlogger-submissions/:submissionId/videos/:videoId", deleteSubmissionVideo);
+router.post("/vlogger-submissions/:submissionId/videos", validate(createSubmissionVideoSchema), asyncHandler(createSubmissionVideo));
+router.get("/vlogger-submissions/:submissionId/videos", asyncHandler(getSubmissionVideos));
+router.get("/vlogger-submissions/:submissionId/videos/:videoId", asyncHandler(getSubmissionVideoById));
+router.patch("/vlogger-submissions/:submissionId/videos/:videoId", validate(updateSubmissionVideoSchema), asyncHandler(updateSubmissionVideo));
+router.delete("/vlogger-submissions/:submissionId/videos/:videoId", asyncHandler(deleteSubmissionVideo));
 
 export default router;

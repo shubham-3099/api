@@ -1,7 +1,6 @@
 import prisma from "../lib/prisma.js";
 
 export const createSubmissionVideo = async (req, res) => {
-  try {
     const submissionId = Number(req.params.submissionId);
 
     const { platform, videoUrl } = req.body;
@@ -19,22 +18,6 @@ export const createSubmissionVideo = async (req, res) => {
       });
     }
 
-    const existingVideo = await prisma.submissionVideo.findUnique({
-      where: {
-        submissionId_platform: {
-          submissionId,
-          platform,
-        },
-      },
-    });
-
-    if (existingVideo) {
-      return res.status(409).json({
-        success: false,
-        message: "Video for this platform already exists for this submission",
-      });
-    }
-
     const video = await prisma.submissionVideo.create({
       data: {
         submissionId,
@@ -47,18 +30,9 @@ export const createSubmissionVideo = async (req, res) => {
       success: true,
       data: video,
     });
-  } catch (error) {
-    console.error(error);
-
-    res.status(500).json({
-      success: false,
-      message: "Failed to create submission video",
-    });
-  }
 };
 
 export const getSubmissionVideos = async (req, res) => {
-  try {
     const submissionId = Number(req.params.submissionId);
 
     const submission = await prisma.vloggerSubmission.findUnique({
@@ -87,18 +61,9 @@ export const getSubmissionVideos = async (req, res) => {
       success: true,
       data: videos,
     });
-  } catch (error) {
-    console.error(error);
-
-    res.status(500).json({
-      success: false,
-      message: "Failed to fetch submission videos",
-    });
-  }
 };
 
 export const getSubmissionVideoById = async (req, res) => {
-  try {
     const submissionId = Number(req.params.submissionId);
     const videoId = Number(req.params.videoId);
 
@@ -120,18 +85,9 @@ export const getSubmissionVideoById = async (req, res) => {
       success: true,
       data: video,
     });
-  } catch (error) {
-    console.error(error);
-
-    res.status(500).json({
-      success: false,
-      message: "Failed to fetch submission video",
-    });
-  }
 };
 
 export const updateSubmissionVideo = async (req, res) => {
-  try {
     const submissionId = Number(req.params.submissionId);
     const videoId = Number(req.params.videoId);
 
@@ -172,18 +128,9 @@ export const updateSubmissionVideo = async (req, res) => {
       success: true,
       data: video,
     });
-  } catch (error) {
-    console.error(error);
-
-    res.status(500).json({
-      success: false,
-      message: "Failed to update submission video",
-    });
-  }
 };
 
 export const deleteSubmissionVideo = async (req, res) => {
-  try {
     const submissionId = Number(req.params.submissionId);
     const videoId = Number(req.params.videoId);
 
@@ -208,12 +155,4 @@ export const deleteSubmissionVideo = async (req, res) => {
     });
 
     res.status(204).send();
-  } catch (error) {
-    console.error(error);
-
-    res.status(500).json({
-      success: false,
-      message: "Failed to delete submission video",
-    });
-  }
 };
